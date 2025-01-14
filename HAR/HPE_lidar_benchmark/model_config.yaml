@@ -1,0 +1,15 @@
+lidar:
+  ## input shape = (B,N,C)
+  num_point: 1024 ## for farthest down sampling, num_point != N
+  nblocks: 5 ## number of transition down blocks
+  nneighbor: 16 ## knn
+  num_class: 51 ## 17*3, 34 for 2d kpt regression
+  input_dim: 3 ## C
+  transformer_dim: 512 ## dimension with each transformer block
+
+mmwave:
+  nblocks: 5
+  nneighbor: 16
+  num_class: 51
+  input_dim: 5
+
