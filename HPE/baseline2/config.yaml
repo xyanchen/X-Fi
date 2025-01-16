@@ -1,4 +1,5 @@
 modality: ['rgb', 'depth', 'lidar', 'mmwave','wifi-csi']
+# modality: 'rgb'
 protocol: protocol3
 
 data_unit: frame
@@ -64,5 +65,3 @@ modality_existances:
   train_random_seed: 0
   val_random_seed: 1
 
-training_epochs: 100
-learning_rate: 0.001

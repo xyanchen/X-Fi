@@ -1,8 +1,10 @@
 import os
 import scipy.io as scio
+import glob
 import cv2
 import torch
 import numpy as np
+import time
 from torch.utils.data import Dataset, DataLoader
 
 def decode_config(config):
@@ -158,12 +160,16 @@ class Domain_Invariant_Dataset(Dataset):
                                                             action, 'ground_truth.npy'),
                                     'idx': frame_idx
                                     }
+                    # print(frame_idx)
                     for mod in self.modality:
                         if mod == 'mmwave':
                             data_dict[mod+'_path'] = os.path.join(self.data_base.data_root, self.get_scene(subject), subject, action, mod, sorted(os.listdir(os.path.join(self.data_base.data_root, self.get_scene(subject), subject, action, mod)))[idx])
                         else:
                             data_dict[mod+'_path'] = os.path.join(self.data_base.data_root, self.get_scene(subject), subject, action, mod, sorted(os.listdir(os.path.join(self.data_base.data_root, self.get_scene(subject), subject, action, mod)))[frame_idx])
+                    # data_dict['mmwave_filtered_path'] = os.path.join(self.data_base.data_root, self.get_scene(subject), subject, action, 'mmwave_filtered', sorted(os.listdir(os.path.join(self.data_base.data_root, self.get_scene(subject), subject, action, 'mmwave_filtered')))[idx])
                     data_info += (data_dict,)
+                    # print(data_info)
+                    # print(a)
         return data_info
 
     def read_frame(self, frame):
@@ -172,7 +178,7 @@ class Domain_Invariant_Dataset(Dataset):
         if mod in ['infra1', 'infra2', 'rgb']:
             data = cv2.imread(frame)
         elif mod == 'depth':
-            data = cv2.imread(frame)
+            data = cv2.imread(frame)  # TODO: 深度和RGB的读取格式好像有区别？我忘了，待定
         elif mod == 'lidar':
             with open(frame, 'rb') as f:
                 raw_data = f.read()
@@ -187,12 +193,16 @@ class Domain_Invariant_Dataset(Dataset):
         elif mod == 'wifi-csi':
             data = scio.loadmat(frame)['CSIamp']
             data[np.isinf(scio.loadmat(frame)['CSIamp'])] = np.nan
-            for i in range(10):
+            for i in range(10):  # 32
                 temp_col = data[:, :, i]
                 nan_num = np.count_nonzero(temp_col != temp_col)
                 if nan_num != 0:
                     temp_not_nan_col = temp_col[temp_col == temp_col]
                     temp_col[np.isnan(temp_col)] = temp_not_nan_col.mean()
+            # csi_amp = temp_col
+            # df_csi_amp = pd.DataFrame(csi_amp)
+            # pd.DataFrame.fillna(methode='ffill')
+            # csi_amp = df_csi_amp.values
 
             data = torch.tensor((data - np.min(data)) / (np.max(data) - np.min(data)))
             data = np.array(data)
@@ -216,12 +226,15 @@ class Domain_Invariant_Dataset(Dataset):
                     'output': gt_torch[item['idx']]
                     }
         for mod in item['modality']:
+            # start_t = time.time()
             data_path = item[mod + '_path']
             if os.path.isfile(data_path):
                 data_mod = self.read_frame(data_path)
                 sample['input_'+mod] = data_mod
             else:
                 raise ValueError('{} is not a file!'.format(data_path))
+            # end_t = time.time()
+            # print('Read {} takes {}s'.format(mod, end_t-start_t))
         return sample
         # sample = {'modality': ['rgb', 'depth', 'lidar', 'mmwave'],
         #           'scene': 'E01',
@@ -239,10 +252,37 @@ class Domain_Invariant_Dataset(Dataset):
 def make_dataset(dataset_root, config):
     database = MetaFi_Database(dataset_root)
     config_dataset = decode_config(config)
+    # print(config_dataset)
     train_dataset = Domain_Invariant_Dataset(database, **config_dataset['train_dataset'])
     print('/n')
     val_dataset = Domain_Invariant_Dataset(database, **config_dataset['val_dataset'])
     return train_dataset, val_dataset
+
+# def collate_fn_padd(batch):
+#     '''
+#     Padds batch of variable length
+
+#     note: it converts things ToTensor manually here since the ToTensor transform
+#     assume it takes in images rather than arbitrary tensors.
+#     '''
+#     ## get sequence lengths
+#     # for t in batch:
+#         # print(t['output'].type)
+#     #     print(a)
+#         # print(t[0].shape,t[1].shape)
+#     kpts = []
+#     [kpts.append(np.array(t['output'])) for t in batch]
+#     kpts = torch.FloatTensor(np.array(kpts))
+
+#     lengths = torch.tensor([t['input_mmwave'].shape[0] for t in batch ])
+#     ## padd
+#     batch = [torch.Tensor(t['input_mmwave']) for t in batch ]
+#     batch = torch.nn.utils.rnn.pad_sequence(batch)
+#     ## compute mask
+#     batch = batch.permute(1,0,2)
+#     mask = (batch != 0)
+
+#     return batch, kpts, lengths, mask
 
 def make_dataloader(dataset, is_training, generator, batch_size, collate_fn):
     loader = DataLoader(

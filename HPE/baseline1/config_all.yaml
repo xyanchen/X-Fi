@@ -1,4 +1,39 @@
-modality: ['rgb', 'depth', 'lidar', 'mmwave','wifi-csi']
+# modality: ['rgb', 'depth', 'lidar', 'mmwave','wifi-csi']
+# modality: ['depth', 'wifi-csi']
+modality_list: [
+  ['rgb'],
+  ['depth'],
+  ['lidar'],
+  ['mmwave'],
+  ['wifi-csi'],
+  ['rgb','depth'],
+  ['rgb','lidar'],
+  ['rgb','mmwave'],
+  ['rgb','wifi-csi'],
+  ['depth','lidar'],
+  ['depth','mmwave'],
+  ['depth','wifi-csi'],
+  ['lidar','mmwave'],
+  ['lidar','wifi-csi'],
+  ['mmwave','wifi-csi'],
+  ['rgb','depth','lidar'],
+  ['rgb','depth','mmwave'],
+  ['rgb','depth','wifi-csi'],
+  ['rgb','lidar','mmwave'],
+  ['rgb','lidar','wifi-csi'],
+  ['rgb','mmwave','wifi-csi'],
+  ['depth','lidar','mmwave'],
+  ['depth','lidar','wifi-csi'],
+  ['depth','mmwave','wifi-csi'],
+  ['lidar','mmwave','wifi-csi'],
+  ['rgb','depth','lidar','mmwave'],
+  ['rgb','depth','lidar','wifi-csi'],
+  ['rgb','depth','mmwave','wifi-csi'],
+  ['rgb','lidar','mmwave','wifi-csi'],
+  ['depth','lidar','mmwave','wifi-csi'],
+  ['rgb','depth','lidar','mmwave','wifi-csi']
+]
+# modality: 'rgb'
 protocol: protocol3
 
 data_unit: frame
@@ -64,5 +99,3 @@ modality_existances:
   train_random_seed: 0
   val_random_seed: 1
 
-training_epochs: 100
-learning_rate: 0.001
