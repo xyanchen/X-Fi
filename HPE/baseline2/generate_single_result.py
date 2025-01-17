@@ -116,7 +116,7 @@ def get_result(rgb_model,depth_model,mmwave_model,lidar_model,wifi_model, tensor
     np.save('./baseline_results/mmwave_result.npy', mmwave_result)
     np.save('./baseline_results/lidar_result.npy', lidar_result)
     np.save('./baseline_results/wifi_result.npy', wifi_result)
-    np.save('./baseline_results/all_label.npy', all_label)
+    np.save('./baseline_results/gt_label.npy', all_label)
     return
 
 
@@ -131,25 +131,26 @@ rng_generator = torch.manual_seed(config['init_rand_seed'])
 train_loader = make_dataloader(train_dataset, is_training=True, generator=rng_generator, **config['loader'], collate_fn = collate_fn_padd)
 val_loader = make_dataloader(val_dataset, is_training=False, generator=rng_generator, **config['loader'], collate_fn = collate_fn_padd)
 
+device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
+
 rgb_model = single_model(['rgb'])
 rgb_model.load_state_dict(torch.load('./baseline_weights/RGB.pt'))
-rgb_model.cuda()
+rgb_model.to(device)
 
 depth_model = single_model(['depth'])
 depth_model.load_state_dict(torch.load('./baseline_weights/Depth.pt'))
-depth_model.cuda()
+depth_model.to(device)
 
 mmwave_model = single_model(['mmwave'])
 mmwave_model.load_state_dict(torch.load('./baseline_weights/mmWave.pt'))
-mmwave_model.cuda()
+mmwave_model.to(device)
 
 lidar_model = single_model(['lidar'])
 lidar_model.load_state_dict(torch.load('./baseline_weights/Lidar.pt'))
-lidar_model.cuda()
+lidar_model.to(device)
 
 wifi_model = single_model(['wifi-csi'])
 wifi_model.load_state_dict(torch.load('./baseline_weights/Wifi.pt'))
-wifi_model.cuda()
+wifi_model.to(device)
 
-device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
 get_result(rgb_model,depth_model,mmwave_model,lidar_model,wifi_model, val_loader, device)

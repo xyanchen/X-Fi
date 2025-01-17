@@ -1,12 +1,7 @@
 import torch
 from torch import nn
-import random
-from tqdm import tqdm
-from torch.utils.data import Dataset, DataLoader
 import yaml
 from evaluate import error
-import time
-
 from syn_DI_dataset import make_dataset, make_dataloader
 from utils import collate_fn_padd, multi_test
 from X_Fi import X_Fi
@@ -25,15 +20,14 @@ def main():
     # load dataset and dataloader
     train_dataset, val_dataset = make_dataset(dataset_root, config)
     rng_generator = torch.manual_seed(config['init_rand_seed'])
-    train_loader = make_dataloader(train_dataset, is_training=True, generator=rng_generator, **config['loader'], collate_fn = collate_fn_padd)
     val_loader = make_dataloader(val_dataset, is_training=False, generator=rng_generator, **config['loader'], collate_fn = collate_fn_padd)
 
     # load model
     torch.manual_seed(3407)
     model = X_Fi()
     model.to(device)
-    model.load_state_dict(torch.load('./checkpoints/epoch_100.pth'))
-
+    model.load_state_dict(torch.load('./pre-trained_weights/mmfi_hpe_checkpoint.pt'))
+    print(model.load_state_dict(torch.load('./pre-trained_weights/mmfi_hpe_checkpoint.pt')))
     # Train the model
     train_criterion = nn.MSELoss()
     test_criterion = error

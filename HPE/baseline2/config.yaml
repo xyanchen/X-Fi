@@ -1,5 +1,5 @@
 modality: ['rgb', 'depth', 'lidar', 'mmwave','wifi-csi']
-# modality: 'rgb'
+
 protocol: protocol3
 
 data_unit: frame

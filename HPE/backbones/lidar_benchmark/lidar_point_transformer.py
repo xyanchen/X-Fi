@@ -1,8 +1,8 @@
 import torch
 import torch.nn as nn
 import yaml
-from lidar_benchmark.pointnet_util import PointNetFeaturePropagation, PointNetSetAbstraction
-from lidar_benchmark.pointnet_util import index_points, square_distance
+from backbones.lidar_benchmark.pointnet_util import PointNetFeaturePropagation, PointNetSetAbstraction
+from backbones.lidar_benchmark.pointnet_util import index_points, square_distance
 import torch.nn.functional as F
 import numpy as np
 
@@ -118,10 +118,9 @@ class Backbone(nn.Module):
 
 
 class lidar_PointTransformerReg(nn.Module):
-    def __init__(self):
+    def __init__(self, root):
         super().__init__()
-        root = "C:/Users/Chen_Xinyan/Desktop/Modality_Invariant/HPE"
-        with open(root + '/lidar_benchmark/model_config.yaml', 'r') as fd:
+        with open(root + '/backbones/lidar_benchmark/model_config.yaml', 'r') as fd:
             model_cfg = yaml.load(fd, Loader=yaml.FullLoader)   
         lidar_cfg = model_cfg['lidar']
         self.backbone = Backbone(lidar_cfg)

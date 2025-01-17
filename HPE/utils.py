@@ -70,7 +70,7 @@ def collate_fn_padd(batch):
     
     modality_list = generate_none_empth_modality_list()
 
-    return rgb_data, depth_data, lidar_data, mmwave_data, wifi_data, kpts, modality_list
+    return rgb_data, depth_data, mmwave_data, lidar_data, wifi_data, kpts, modality_list
 
 def hpe_test(model, tensor_loader, criterion1, criterion2, device, val_random_seed):
     model.eval()
@@ -79,7 +79,7 @@ def hpe_test(model, tensor_loader, criterion1, criterion2, device, val_random_se
     test_mse = 0
     random.seed(val_random_seed)
     for data in tqdm(tensor_loader):
-        rgb_data, depth_data, lidar_data, mmwave_data, wifi_data, kpts, modality_list = data
+        rgb_data, depth_data, mmwave_data, lidar_data, wifi_data, kpts, modality_list = data
         rgb_data = rgb_data.to(device)
         depth_data = depth_data.to(device)
         lidar_data = lidar_data.to(device)
@@ -87,7 +87,7 @@ def hpe_test(model, tensor_loader, criterion1, criterion2, device, val_random_se
         wifi_data = wifi_data.to(device)
         kpts.to(device)
         labels = kpts.type(torch.FloatTensor)
-        outputs = model(rgb_data, depth_data,  mmwave_data, lidar_data,wifi_data, modality_list)
+        outputs = model(rgb_data, depth_data,  mmwave_data, lidar_data, wifi_data, modality_list)
         outputs = outputs.type(torch.FloatTensor)
         outputs.to(device)
         test_mse += criterion1(outputs,labels).item() * rgb_data.size(0)
@@ -112,7 +112,7 @@ def hpe_train(model, train_loader, test_loader, num_epochs, learning_rate, train
             ],
         lr = learning_rate
     )
-    now_time = datetime.utcnow().strftime('%Y-%m-%d_%H:%M:%S')
+    now_time = datetime.now().strftime('%Y-%m-%d_%H:%M:%S')
     parameter_dir = save_dir + '/checkpoint_' + now_time + '.pth'
     best_test_mpjpe = 100
     for epoch in range(num_epochs):
@@ -122,7 +122,7 @@ def hpe_train(model, train_loader, test_loader, num_epochs, learning_rate, train
         num_iter = 1000
         for i, data in enumerate(tqdm(train_loader)):
             if i < num_iter:
-                rgb_data, depth_data, lidar_data, mmwave_data, wifi_data, kpts, modality_list = data
+                rgb_data, depth_data, mmwave_data, lidar_data, wifi_data, kpts, modality_list = data
                 rgb_data = rgb_data.to(device)
                 depth_data = depth_data.to(device)
                 lidar_data = lidar_data.to(device)
@@ -305,7 +305,7 @@ def multi_test(model, tensor_loader, criterion1, criterion2, device, val_random_
         ' SINGLE MODALITY '
         ### rgb
         rgb_modality_list = [True, False, False, False, False]
-        rgb_outputs = model(rgb_data, depth_data,  mmwave_data, lidar_data, wifi_data, rgb_modality_list)
+        rgb_outputs = model(rgb_data, depth_data, mmwave_data, lidar_data, wifi_data, rgb_modality_list)
         rgb_outputs = rgb_outputs.type(torch.FloatTensor)
         rgb_outputs.to(device)
         rgb_test_mse += criterion1(rgb_outputs,labels).item() * rgb_data.size(0)
@@ -315,7 +315,7 @@ def multi_test(model, tensor_loader, criterion1, criterion2, device, val_random_
         rgb_test_pampjpe += rgb_pampjpe.item() * rgb_data.size(0)
         ### depth
         depth_modality_list = [False, True, False, False, False]
-        depth_outputs = model(rgb_data, depth_data,  mmwave_data, lidar_data, wifi_data, depth_modality_list)
+        depth_outputs = model(rgb_data, depth_data, mmwave_data, lidar_data, wifi_data, depth_modality_list)
         depth_outputs = depth_outputs.type(torch.FloatTensor)
         depth_outputs.to(device)
         depth_test_mse += criterion1(depth_outputs,labels).item() * rgb_data.size(0)

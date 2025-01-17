@@ -2,9 +2,9 @@ import torch
 from torch import nn
 from torchvision.transforms import Resize
 import sys
+import os
 
 from einops import rearrange, reduce, repeat
-from einops.layers.torch import Rearrange, Reduce
 
 from backbones.RGB_benchmark.RGB_ResNet import *
 from backbones.depth_benchmark.depth_ResNet18 import *
@@ -110,27 +110,27 @@ class feature_extrator(nn.Module):
         super(feature_extrator, self).__init__()
         
         rgb_model = RGB_ResNet18()
-        rgb_model.load_state_dict(torch.load('./RGB_benchmark/rgb_ResNet18/RGB_Resnet18_copy.pt'))
+        rgb_model.load_state_dict(torch.load('./backbones/RGB_benchmark/RGB_Resnet18.pt'))
         rgb_extractor = rgb_feature_extractor(rgb_model)
         rgb_extractor.eval()
 
         depth_model = Depth_ResNet18()
-        depth_model.load_state_dict(torch.load('depth_benchmark/depth_Resnet18.pt'))
+        depth_model.load_state_dict(torch.load('./backbones/depth_benchmark/depth_Resnet18.pt'))
         depth_extractor = depth_feature_extractor(depth_model)
         depth_extractor.eval()
         
         mmwave_model = mmwave_PointTransformerReg()
-        mmwave_model.load_state_dict(torch.load('mmwave_benchmark/mmwave_all_random_TD.pt'))
+        mmwave_model.load_state_dict(torch.load('./backbones/mmwave_benchmark/mmwave_all_random_TD.pt'))
         mmwave_extractor = mmwave_feature_extractor(mmwave_model)
         mmwave_extractor.eval()
 
-        lidar_model = lidar_PointTransformerReg()
-        lidar_model.load_state_dict(torch.load('lidar_benchmark/lidar_all_random.pt'))
+        lidar_model = lidar_PointTransformerReg(root=os.getcwd())
+        lidar_model.load_state_dict(torch.load('./backbones/lidar_benchmark/lidar_all_random.pt'))
         lidar_extractor = lidar_feature_extractor(lidar_model)
         lidar_extractor.eval()
 
         sys.path.insert(0, './backbones/CSI_benchmark')
-        csi_model = torch.load('CSI_benchmark/protocol3_random_1.pkl')
+        csi_model = torch.load('./backbones/CSI_benchmark/protocol3_random_1.pkl')
         csi_extractor = csi_feature_extractor(csi_model)
         csi_extractor.eval()
 
@@ -488,7 +488,6 @@ class X_Fi(nn.Module):
         feature_list = self.feature_extractor(rgb_data, depth_data, mmwave_data, lidar_data, csi_data, modality_list)
         projected_features = self.linear_projector(feature_list, lidar_data, modality_list)
         out = self.X_Fusion_block(projected_features, modality_list)
-        # out = out.view(-1, 17, 3)
         return out
 
 

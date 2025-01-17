@@ -46,7 +46,7 @@ def main():
         train_criterion = train_criterion,
         test_criterion = test_criterion,
         device = device,
-        save_dir ='./checkpoints',
+        save_dir = './pre-trained_weights',
         val_random_seed = config['modality_existances']['val_random_seed']
     )
     return
