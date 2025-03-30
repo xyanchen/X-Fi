@@ -72,17 +72,17 @@ class single_feature_extrator(nn.Module):
         "modality_list: list of string, choose from ['mmwave', 'wifi', 'rfid']"
         super(single_feature_extrator, self).__init__()
         if 'mmwave' in modality_list:
-            mmwave_model = torch.load(os.path.join(parentdir, 'backbone_models/mmWave/ResNet18.pt'))
+            mmwave_model = torch.load(os.path.join(parentdir, 'backbone_models/mmWave/mmwave_ResNet18.pt'))
             mmwave_extractor = mmwave_feature_extractor(mmwave_model)
             mmwave_extractor.eval()
             self.mmwave_extractor = mmwave_extractor
         if 'wifi' in modality_list:
-            wifi_model = torch.load(os.path.join(parentdir, 'backbone_models/WIFI/ResNet18.pt'))
+            wifi_model = torch.load(os.path.join(parentdir, 'backbone_models/WIFI/wifi_ResNet18.pt'))
             wifi_extractor = wifi_feature_extractor(wifi_model)
             wifi_extractor.eval()
             self.wifi_extractor = wifi_extractor
         if 'rfid' in modality_list:
-            rfid_model = torch.load(os.path.join(parentdir, 'backbone_models/RFID/ResNet18.pt'))
+            rfid_model = torch.load(os.path.join(parentdir, 'backbone_models/RFID/rfid_ResNet18.pt'))
             rfid_extractor = rfid_feature_extractor(rfid_model)
             rfid_extractor.eval()
             self.rfid_extractor = rfid_extractor
@@ -123,17 +123,17 @@ class Dual_feature_extrator(nn.Module):
         "modality_list: list of string, choose from ['mmwave', 'wifi', 'rfid']"
         super(Dual_feature_extrator, self).__init__()
         if 'mmwave' in modality_list:
-            mmwave_model = torch.load(os.path.join(parentdir, 'backbone_models/mmWave/ResNet18.pt'))
+            mmwave_model = torch.load(os.path.join(parentdir, 'backbone_models/mmWave/mmwave_ResNet18.pt'))
             mmwave_extractor = mmwave_feature_extractor(mmwave_model)
             mmwave_extractor.eval()
             self.mmwave_extractor = mmwave_extractor
         if 'wifi' in modality_list:
-            wifi_model = torch.load(os.path.join(parentdir, 'backbone_models/WIFI/ResNet18.pt'))
+            wifi_model = torch.load(os.path.join(parentdir, 'backbone_models/WIFI/wifi_ResNet18.pt'))
             wifi_extractor = wifi_feature_extractor(wifi_model)
             wifi_extractor.eval()
             self.wifi_extractor = wifi_extractor
         if 'rfid' in modality_list:
-            rfid_model = torch.load(os.path.join(parentdir, 'backbone_models/RFID/ResNet18.pt'))
+            rfid_model = torch.load(os.path.join(parentdir, 'backbone_models/RFID/rfid_ResNet18.pt'))
             rfid_extractor = rfid_feature_extractor(rfid_model)
             rfid_extractor.eval()
             self.rfid_extractor = rfid_extractor
@@ -189,17 +189,17 @@ class Triple_feature_extrator(nn.Module):
         "modality_list: list of string, choose from ['mmwave', 'wifi', 'rfid']"
         super(Triple_feature_extrator, self).__init__()
         if 'mmwave' in modality_list:
-            mmwave_model = torch.load(os.path.join(parentdir, 'backbone_models/mmWave/ResNet18.pt'))
+            mmwave_model = torch.load(os.path.join(parentdir, 'backbone_models/mmWave/mmwave_ResNet18.pt'))
             mmwave_extractor = mmwave_feature_extractor(mmwave_model)
             mmwave_extractor.eval()
             self.mmwave_extractor = mmwave_extractor
         if 'wifi' in modality_list:
-            wifi_model = torch.load(os.path.join(parentdir, 'backbone_models/WIFI/ResNet18.pt'))
+            wifi_model = torch.load(os.path.join(parentdir, 'backbone_models/WIFI/wifi_ResNet18.pt'))
             wifi_extractor = wifi_feature_extractor(wifi_model)
             wifi_extractor.eval()
             self.wifi_extractor = wifi_extractor
         if 'rfid' in modality_list:
-            rfid_model = torch.load(os.path.join(parentdir, 'backbone_models/RFID/ResNet18.pt'))
+            rfid_model = torch.load(os.path.join(parentdir, 'backbone_models/RFID/rfid_ResNet18.pt'))
             rfid_extractor = rfid_feature_extractor(rfid_model)
             rfid_extractor.eval()
             self.rfid_extractor = rfid_extractor

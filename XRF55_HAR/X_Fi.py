@@ -60,15 +60,15 @@ class feature_extrator(nn.Module):
     def __init__(self):
         super(feature_extrator, self).__init__()
         
-        mmwave_model = torch.load('./backbone_models/mmWave/ResNet18.pt')
+        mmwave_model = torch.load('./backbone_models/mmWave/mmwave_ResNet18.pt')
         mmwave_extractor = mmwave_feature_extractor(mmwave_model)
         mmwave_extractor.eval()
 
-        wifi_model = torch.load('./backbone_models/WIFI/ResNet18.pt')
+        wifi_model = torch.load('./backbone_models/WIFI/wifi_ResNet18.pt')
         wifi_extractor = wifi_feature_extractor(wifi_model)
         wifi_extractor.eval()
 
-        rfid_model = torch.load('./backbone_models/RFID/ResNet18.pt')
+        rfid_model = torch.load('./backbone_models/RFID/rfid_ResNet18.pt')
         rfid_extractor = rfid_feature_extractor(rfid_model)
         rfid_extractor.eval()
 
