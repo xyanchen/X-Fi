@@ -173,6 +173,7 @@ def train(model, train_loader, test_loader, num_epochs, learning_rate, criterion
     return
 
 dataset_root = 'd:\Data\My_MMFi_Data\MMFi_Dataset'
+
 with open('config_all.yaml', 'r') as fd:
     config = yaml.load(fd, Loader=yaml.FullLoader)
 
