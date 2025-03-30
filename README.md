@@ -26,7 +26,7 @@ We evaluated **<span style="color: #FF4500;">X</span><span style="color: #FF6347
 
 ## Requirements
 
-1. Install `pytorch` and `torchvision` (we use `pytorch==x.xx.x` and `torchvision==x.xx.x`).
+1. Install `pytorch` and `torchvision` (we use `pytorch==2.1.1` and `torchvision==0.16.1`).
 2. `pip install -r requirements.txt`
 
 ## Prepare Datasets and PT Model Weights

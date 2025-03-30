@@ -1,6 +1,6 @@
 import torch
 from torch import nn
-from einops import rearrange, reduce, repeat
+from einops import rearrange
 import os
 
 from backbones.RGB_benchmark.RGB_ResNet import *
