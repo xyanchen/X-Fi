@@ -29,17 +29,66 @@ We evaluated **<span style="color: #FF4500;">X</span><span style="color: #FF6347
 1. Install `pytorch` and `torchvision` (we use `pytorch==x.xx.x` and `torchvision==x.xx.x`).
 2. `pip install -r requirements.txt`
 
-## Run
+## Prepare Datasets and PT Model Weights
 ### Download Processed Data
 - Please download [MM-Fi datatset](https://github.com/ybhbingo/MMFi_dataset) and [XRF55 datatset](https://github.com/aiotgroup/XRF55-repo) from their official websites.
-- Oragnize the downloaed dataset in the following structure:
+- Remember the dataset saving dir for data loading process.
+- Suggest to oragnize the downloaed dataset in the following structure:
 ```
 X-Fi
 ├── Data
     ├── MMFi_Dataset
-    │   ├── 
-    │   ├── 
     ├── XRF55_Dataset
-    │   ├── 
-    │   ├── 
 ```
+### Download Pretrained Modality-Specific Backbones or Pretrained X-Fi Model
+- Please download [Modality-Specific Backbones &  Pretrained X-Fi Model](https://drive.google.com/drive/folders/1ShcQqUd5RnqsTBZ3yM97hrooa7p06O2g?usp=sharing) from cloud storage.
+#### For pretrained modality-specific backbones
+Oragnize the downloaed `.pt` files into modality-corresponded sub-folders within each tasks's `backbones` or `backbone_models` folder.
+
+Take the example of `MMFi_HAR` task, the organized structure will be:
+```
+X-Fi
+├── MMFi_HAR
+|   ├── backbones
+|   |   ├── depth_benchmark
+|   |   |   ├── depth_Resnet18.pt
+|   |   ├── lidar_benchmark
+|   |   |   ├── lidar_all_random.pt
+|   |   ├── mmwave_benchmark
+|   |   |   ├── mmwave_all_random_TD.pt
+|   |   ├── RGB_benchmark
+|   |   |   ├── RGB_Resnet18.pt
+```
+#### For pretrained X-Fi model
+Unzip the downloaded `pre-trained_weights` folder into corresponding task main folder. e.g.
+```
+X-Fi
+├── MMFi_HAR
+|   ├── pre-trained_weights
+|   |   ├── mmfi_har_checkpoint.pt
+```
+## Run
+### Change Directory
+Before run the scripts, `cd` into different task main folder directory. 
+
+Each task main folder is included in **X-FI folder** as follows:
+```
+X-Fi
+├── MMFi_HAR
+├── MMFi_HPE
+├── XRF55_HAR
+```
+### X-Fi Model Training
+To train X-Fi model with default setting:
+
+Run: `python run.py --dataset [path/to/corresponding/dataset]`
+
+*Example: `<root_path>/X-Fi/MMFi_HAR > python run.py --dataset d:/Data/My_MMFi_Data/MMFi_Dataset`*
+
+### X-Fi Model Validation
+To validate the trained X-Fi model performance on **all modality combinations**:
+
+Run: `python validate_all.py --dataset [path/to/corresponding/dataset] --pt_weights [path/to/saved/pretrained/model/weights]`
+
+ *Example: 
+ `<root_path>/X-Fi/MMFi_HAR > python validate_all.py --dataset d:/Data/My_MMFi_Data/MMFi_Dataset --pt_weights ./pre-trained_weights/mmfi_har_checkpoint.pt`*
