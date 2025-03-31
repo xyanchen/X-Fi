@@ -100,7 +100,7 @@ python validate_all.py --dataset [path/to/corresponding/dataset] --pt_weights [p
     title={X-Fi: A Modality-Invariant Foundation Model for Multimodal Human Sensing}, 
     author={Chen, Xinyan and Yang, Jianfei},
     booktitle = {International Conference on Learning Representations},
-    Month = {May},
+    Month = {April},
     year = {2025}
 }
 ```
